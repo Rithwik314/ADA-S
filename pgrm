@@ -1,0 +1,43 @@
+#include <iostream>
+#include <sys/time.h>
+#include <time.h>
+#include <sys/resource.h>
+using namespace std;
+void selectionSort(int arr[100], int n) {
+    int i, j, min, temp;
+    for (i = 0; i <= n - 2; i++) {
+        min = i;
+        for (j = i + 1; j <= n - 1; j++) {
+            if (arr[j] < arr[min])
+                min = j;
+        }
+        temp = arr[min];
+        arr[min] = arr[i];
+        arr[i] = temp;
+    }
+}
+int main() {
+    struct timeval startTime, endTime;
+    int size, input[50], i;
+    struct rusage resourceUsage;
+    cout << "Enter the input size: " <<endl;
+    cin >> size;
+    cout << "Enter the array elements: " <<endl;
+    
+    for (i = 0; i < size; i++) {
+        cin >> input[i];
+    }
+    gettimeofday(&startTime, NULL);
+    selectionSort(input, size);
+    gettimeofday(&endTime, NULL);
+    cout << "\nSorted array is: " <<endl;
+    for (i = 0; i < size; i++) {
+        cout << input[i] << "\t";
+    }
+    double elapsedTimeMicroseconds = (double)(endTime.tv_usec - startTime.tv_usec);
+    double elapsedTimeSeconds = (double)(endTime.tv_usec - startTime.tv_usec) / 1000000 + (double)(endTime.tv_sec - startTime.tv_sec);
+    cout << "Time of selection sort = " << elapsedTimeMicroseconds << " microseconds" << endl;
+    cout << "Total time = " << elapsedTimeSeconds << " seconds" << endl;
+    getrusage(RUSAGE_SELF, &resourceUsage);
+    cout << "Memory usage: " << resourceUsage.ru_maxrss << " kilobytes" <<endl;
+}
